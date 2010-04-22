@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 21
+/svn/!svn/ver/3/trunk
+END
+pyict.py
+K 25
+svn:wc:ra_dav:version-url
+V 30
+/svn/!svn/ver/2/trunk/pyict.py
+END
+Configure.xml
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/Configure.xml
+END
+ictclas.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/svn/!svn/ver/2/trunk/ictclas.cpp
+END
+ICTCLAS30.log
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/ICTCLAS30.log
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/svn/!svn/ver/2/trunk/__init__.py
+END
+test.py
+K 25
+svn:wc:ra_dav:version-url
+V 29
+/svn/!svn/ver/2/trunk/test.py
+END
+test2.py
+K 25
+svn:wc:ra_dav:version-url
+V 30
+/svn/!svn/ver/2/trunk/test2.py
+END
+ICTCLAS30.h
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/svn/!svn/ver/2/trunk/ICTCLAS30.h
+END
+libICTCLAS30.a
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/3/trunk/libICTCLAS30.a
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 30
+/svn/!svn/ver/3/trunk/Makefile
+END

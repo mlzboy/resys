@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/19899/Sandbox/resys/lib
+END
+mystruct.py
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/20495/Sandbox/resys/lib/mystruct.py
+END
+commons.py
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/20494/Sandbox/resys/lib/commons.py
+END
+dbconfig.py
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/19899/Sandbox/resys/lib/dbconfig.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/19226/Sandbox/resys/lib/__init__.py
+END
+filehelper.py
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/20495/Sandbox/resys/lib/filehelper.py
+END
+odict.py
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/20495/Sandbox/resys/lib/odict.py
+END
+redishelper.py
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/20495/Sandbox/resys/lib/redishelper.py
+END
+sqlserver.py
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/20495/Sandbox/resys/lib/sqlserver.py
+END

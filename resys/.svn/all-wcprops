@@ -1,0 +1,215 @@
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/svn/!svn/ver/19899/Sandbox/resys
+END
+Text-10.txt
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/19899/Sandbox/resys/Text-10.txt
+END
+test_extend_dict.py
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/19899/Sandbox/resys/test_extend_dict.py
+END
+exportdata3.py
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/19574/Sandbox/resys/exportdata3.py
+END
+generate_message_queue___.py
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/19899/Sandbox/resys/generate_message_queue___.py
+END
+fill_real_matrix_data____.py
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/19673/Sandbox/resys/fill_real_matrix_data____.py
+END
+fill_real_matrix_data___.py
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/19673/Sandbox/resys/fill_real_matrix_data___.py
+END
+prepare_message_queue___.py
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/19899/Sandbox/resys/prepare_message_queue___.py
+END
+fill_blank_matrix_data___.py
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/19673/Sandbox/resys/fill_blank_matrix_data___.py
+END
+exportdata___.py
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/19673/Sandbox/resys/exportdata___.py
+END
+Untitled 2.py
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/19574/Sandbox/resys/Untitled%202.py
+END
+wordcounts.csv
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/19673/Sandbox/resys/wordcounts.csv
+END
+calc_tfidf__.py
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/19673/Sandbox/resys/calc_tfidf__.py
+END
+SQLQuery2.sql
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/19574/Sandbox/resys/SQLQuery2.sql
+END
+export_similarity_result2csv___.py
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/19899/Sandbox/resys/export_similarity_result2csv___.py
+END
+wordcount____.py
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/19673/Sandbox/resys/wordcount____.py
+END
+wordcount___.py
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/19673/Sandbox/resys/wordcount___.py
+END
+calc_idf___.py
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/19673/Sandbox/resys/calc_idf___.py
+END
+result.csv
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/19899/Sandbox/resys/result.csv
+END
+clone_prepare_message_queue___.py
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/19899/Sandbox/resys/clone_prepare_message_queue___.py
+END
+import2redis.py
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/19673/Sandbox/resys/import2redis.py
+END
+do_job___.py
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/19899/Sandbox/resys/do_job___.py
+END
+generate_color_dict.py
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/19899/Sandbox/resys/generate_color_dict.py
+END
+exportdata2.py
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/19574/Sandbox/resys/exportdata2.py
+END
+generate_lost_message_queue___.py
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/19899/Sandbox/resys/generate_lost_message_queue___.py
+END
+tag2.sql
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/19894/Sandbox/resys/tag2.sql
+END
+recommand.csv.bak
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/19899/Sandbox/resys/recommand.csv.bak
+END
+recommand.csv
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/19899/Sandbox/resys/recommand.csv
+END
+query_similarity___.py
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/19899/Sandbox/resys/query_similarity___.py
+END
+exportdata.py
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/19574/Sandbox/resys/exportdata.py
+END
+fill_real_matrix_data____checkisvalid.py
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/19673/Sandbox/resys/fill_real_matrix_data____checkisvalid.py
+END
+import2redis___.py
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/19673/Sandbox/resys/import2redis___.py
+END
+check_lost_tasks___.py
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/19899/Sandbox/resys/check_lost_tasks___.py
+END
+export_similarity_result2csv.py
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/19899/Sandbox/resys/export_similarity_result2csv.py
+END
+README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/20494/Sandbox/resys/README.txt
+END
+copy_slave_r2_to_master_r3___.py
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/19673/Sandbox/resys/copy_slave_r2_to_master_r3___.py
+END
