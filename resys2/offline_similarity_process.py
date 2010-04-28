@@ -18,9 +18,20 @@ db=SqlServer("192.168.1.180","abc","abc","DMDM2")
 db2=SqlServer("192.168.0.92","maolingzhi","zhoubt","SCM")
 
 
+def getcategoryname(categoryid):
+    sql="select categoryname from new_category where categorycode=%s"%categoryid
+    rows=db2.select(sql)
+    if len(rows)>0:
+        return rows[0][0]
+    else:
+        return "-1"
+    
+    
 
 def getonlineproductids():
     "query db get offline productids"
+    if r2.exists("onlineproductids"):
+        return eval(r2.get("onlineproductids"))
     sql="select productcode from product where isoff=0"
     rows=db2.select(sql)
     productids=[]
@@ -36,7 +47,7 @@ def getrecommendproductids():
 
 def getofflineproductids():
     if r1.exists("offlineproductids"):
-        return r1.get("offlineproductids")
+        return eval(r1.get("offlineproductids"))
     r=set(getrecommendproductids())-set(getonlineproductids())
     r1.set("offlineproductids",r)
     return r
@@ -64,10 +75,13 @@ def getoriginalrecommend(productid):
     if len(rows)==0:
         productid=getoneneighborproductid(productid)
     offlineproductids=getofflineproductids()
+    print type(offlineproductids)
+    print "-------------------))))))))))))))"
     #print len(offlineproductids)
     forbidencategories=getforbidencategories(productid)
     print "88"*20
     print forbidencategories
+    hasproductserialcodes=[]
     d=dict()
     for i in rows:
         p1,p2,sim=i[0],i[1],i[2]
@@ -77,9 +91,13 @@ def getoriginalrecommend(productid):
             k=p2
         else:
             k=p1
-        
-        if k not in offlineproductids and len(set(getproductallcategoriesbyproductid(k))&set(forbidencategories))==0:#gethighestproductcategory(k) not in forbidencategories:
+        print getproductallcategoriesbyproductid(k)
+        productserialcode=getproductserialcode(k)
+        if k not in offlineproductids and \
+           len(set(getproductallcategoriesbyproductid(k))&set(forbidencategories))==0 and \
+           (productserialcode not in hasproductserialcodes):#gethighestproductcategory(k) not in forbidencategories:
             d[k]=sim
+            hasproductserialcodes.append(productserialcode)
     #print type(d)
     #for k,v in d.iteritems():
     #    print k,v
@@ -100,19 +118,19 @@ def getproductallcategorynames(p1):
 def _getcategories(p1):
     "产品从大到小的分类"
     if r1.hexists("productcategories",p1):
-        return r1.hget("productcategories",p1)
+        return r1.hget("productcategories",p1)#it's value is a string
         
     sql="SELECT dbo.getcategoryname(categorycode) as category FROM dbo.Product WHERE ProductCode='%s'"%p1
     rows=db2.select(sql)
     if len(rows)==0:
         return "-1"
     else:
-        r1.hset("productcategories",p1)
+        r1.hset("productcategories",p1,rows[0][0])
         return rows[0][0]
 
 def getproductallcategoriesbyproductid(p1):
     if r1.hexists("all",p1):
-        return r1.hget("all",p1)
+        return eval(r1.hget("all",p1))
     lowest_category_id=getlowestproductcategories(p1)[0]
     r=getproductallcategories(lowest_category_id)
     r1.hset("all",p1,r)
@@ -164,13 +182,19 @@ end
         
 def getlowestproductcategories(p1):
     "get this product lowsest categories as a list"
-    if r1.hexists("low",p1):
-        return eval(r1.hget("low",p1))
+    if r1.hexists("all",p1):
+        return [eval(r1.hget("all",p1))[-1]]
+    #if r1.hexists("low",p1):
+    #    return eval(r1.hget("low",p1))
+    
     #print "---------------%s"%p1
-    sql="select distinct c.categorycode from product p inner join clothes c on p.productcode=c.productcode where p.productcode='%s'"%p1
+    sql="select distinct c.categorycode from product p inner join clothes c on p.productcode=c.productcode where p.productcode='%s' and c.categorycode is not null"%p1
     rows=db2.select(sql)
-    categoryid=rows[0][0]
-    low=[str(categoryid)]
+    if len(rows)==0:
+        low=['none']
+    else:
+        categoryid=rows[0][0]
+        low=[str(categoryid)]
     #return [getproductallcategories(p1)[-1]]
     r1.hset("low",p1,low)
     return low
@@ -212,13 +236,40 @@ FROM         dbo.Clothes AS c RIGHT OUTER JOIN
         r1.hset("productcategories",productcode,categorynames)
         all=getproductallcategoriesbyproductid(productcode)
         r1.hset("all",productcode,all)
-        r1.hset("low",productcode,all[-1])#[str(categorycode)])
+        r1.hset("low",productcode,[all[-1]])#[str(categorycode)])
         r1.hset("high",productcode,all[0])#gethighestproductcategory(productcode))
         if isoff==0:
             r1.rpush(categorycode,productcode)#caution:when product isoff info changed or new product add this need update
         
     print "fill redis cache finished"
-
+    
+#def getrandomelements2(list,n):
+#    """
+#        get n random elements from list
+#        if n>len(list) then return all elements
+#        all return elements will not have repeat
+#        e.g.
+#            print getrandomelements([1,2,3],2)==>[2,1]
+#            
+#    """
+#    ll=len(list)
+#    if ll<=n:
+#        return list
+#    count=0
+#    result=[]
+#    productserialcodes=[]
+#    total=0
+#    while count<n or total>100000:
+#        total+=1
+#        new=random.randint(0,ll-1)
+#        productserialcode=getproductserialcode(list[new])
+#        if (new not in result) and (productserialcode not in productserialcodes):
+#            count+=1
+#            result.append(new)
+#            productserialcodes.append(productserialcode)
+#            
+#    return [list[i] for i in result]
+    
 def getrandomelements(list,n):
     """
         get n random elements from list
@@ -250,7 +301,7 @@ def getproductname(p1):
     if len(rows)==0:
         return "-1"
     else:
-        r1.hset("productnames",p1)
+        r1.hset("productnames",p1,rows[0][0])
         return rows[0][0]
     
 ref_count=0
@@ -261,7 +312,9 @@ def get20recordsfromtop60percentdata(p1):
     ref_result=[]
     dicts=getoriginalrecommend(p1)#CAUTION:you can't use dict as variant
     ll=len(dicts)
-    #print ll
+    print "7"*100
+    print ll
+    ll=100
     #5 10 15 20 25 30 35 40 45 50 55 60
     rate1=[5,3,3,2,2,2,2,1,1,1,1,1]#equal 20
     #print "rate1 len:%s"%len(rate1)
@@ -294,7 +347,7 @@ def get20recordsfromtop60percentdata(p1):
 def getforbidencategories(p1):
     highest_category_id=gethighestproductcategory(p1)
     dicts={'101':['139','186']}
-    dicts={'101':['186','321']}
+    dicts={'101':['186','321','139','136']}
     if dicts.has_key(highest_category_id):
         return dicts[highest_category_id]
     else:
@@ -335,10 +388,35 @@ def getalllowestcategoryids():
             categoryids.append(i[0])
     print categoryids
     return categoryids
+
+def _setproductserialcode2redis():
+    sql="SELECT productcode,ProductSerialCode FROM dbo.Product"
+    rows=db2.select(sql)
+    for i in rows:
+        r1.hset("productserialcodes",i[0],i[1])
+    print "finishe load productserialcode to redis memory"
+
+def getproductserialcode(p1):
+    "获取同款"
+    if r1.hexists("productserialcodes",p1):
+        return r1.hget("productserialcodes",p1)
         
+    sql="SELECT ProductSerialCode FROM dbo.Product WHERE ProductCode='%s'"%p1
+    print sql
+    rows=db2.select(sql)
+    if len(rows)==0:
+        return "-1"
+    else:
+        return rows[0][0]        
     
 if __name__=='__main__':
     s=datetime.now()
+    #print getcategoryname('136').decode("gb18030").encode("utf8")
+    #import sys
+    #sys.exit(0)
+    #_setproductserialcode2redis()
+    #import sys
+    #sys.exit(0)
     #lowest_category_id='58'
     #print getproductallcategories(lowest_category_id)
     #for categorycode in getalllowestcategoryids():
@@ -347,10 +425,10 @@ if __name__=='__main__':
     #getproductallcategories('None')
     #getproductallcategories('none')
     #getproductallcategories(None)
-    clearredis()
-    load2redis()
-    import sys
-    sys.exit(0)
+    #clearredis()
+    #load2redis()
+    #import sys
+    #sys.exit(0)
 
     #print getproductallcategorynames("0001847").decode("gb18030").encode("utf8")
     #import sys
@@ -360,10 +438,11 @@ if __name__=='__main__':
     #print getproductallcategories(lowest_category_id)
     #print "high:%s"%gethighestproductcategory('0001206')
     #getproductdetail("0001847")
-    #getproductdetail("0002383")
+    #getproductdetail("0001116")
     #import sys
     #sys.exit(0)
-    r=getoriginalrecommend('0001847')
+    #0001847
+    r=getoriginalrecommend('0002699')
     #getoriginalrecommend('0000108')
     #import sys
     #sys.exit(0)
