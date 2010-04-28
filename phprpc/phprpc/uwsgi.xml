@@ -1,0 +1,6 @@
+<uwsgi>
+    <pythonpath>/home/mlzboy/bijia/resys/phprpc/phprpc</pythonpath>
+    <app mountpoint="/">
+        <script>runbottlewithuwsgi.wsgi</script>
+    </app>
+</uwsgi>

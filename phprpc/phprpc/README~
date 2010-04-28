@@ -1,0 +1,20 @@
+启动服务，因为使用80端口因此要使用sudo以管理员来运行
+sudo python test.py
+使用fapws3来作为bottle的容器,运行在8080端口
+python stress_test.py
+使用ab来压bottle,通过bottle来模拟高迸发
+ab -n 10000 -c 100 http://127.0.0.1:8080/recommend/productid/ep123123/opn/6/userid/323412u
+ab -n 100000 -c 200 http://127.0.0.1:8080/hi/aaa
+
+
+一些评测数据，
+单独压bottle,使用hello world的程序能达到3000QPS,
+但是调用recommend后就只能350QPS,而且还有一些不稳定，后端提供phprpc的应该还是稳定的，是不是前端接了很多请求，而后端处理又很慢，导致socket断了，
+情况不明，没找到原因。
+
+使用什么样的布署方案，现在还没有好的解决办法
+
+
+
+下一步要做的是将在phprpc的脚本放到外面来，原有的phprpc的内容作为一个模块，自己做的MY_PHPRPC_Server不要侵入原有的代码
+

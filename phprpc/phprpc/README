@@ -1,0 +1,88 @@
+启动服务，因为使用80端口因此要使用sudo以管理员来运行
+sudo python test.py
+使用fapws3来作为bottle的容器,运行在8080端口
+python stress_test.py
+使用ab来压bottle,通过bottle来模拟高迸发
+ab -n 10000 -c 100 http://127.0.0.1:8080/recommend/productid/ep123123/topn/6/userid/323412u
+ab -n 100000 -c 200 http://127.0.0.1:8080/hi/aaa
+
+webbench -c 100 http://127.0.0.1:8080/hi/aaa
+
+
+一些评测数据，
+单独压bottle,使用hello world的程序能达到3000QPS,
+但是调用recommend后就只能350QPS,而且还有一些不稳定，后端提供phprpc的应该还是稳定的，是不是前端接了很多请求，而后端处理又很慢，导致socket断了，
+情况不明，没找到原因。
+
+使用什么样的布署方案，现在还没有想好，比如fapws3是否要使用多进程的方式，bottle基于fapws3的部署是否还有很多细节可以调优的地方。
+
+
+
+下一步要做的是将在phprpc的脚本放到外面来，原有的phprpc的内容作为一个模块，自己做的MY_PHPRPC_Server不要侵入原有的代码
+
+2010.4.25
+在使用virtualenv的情况下，在new目录下将uwsgi和phprpc的东西混合部署在同一目录下，
+先编译uwsgi,使用如下命令：
+make -f Makefile.Py26
+之后将phprpc/phprpc下的内容拷贝到uwsgi的相同目录中运行如下命令
+sudo ./uwsgi -s 0.0.0.0:80 -C -w stress_test
+可以使用uwsgi作为bottle的容器
+
+new test:
+ab -n 100000 -c 200 http://127.0.0.1/hi/aaa
+
+
+
+
+frontend web server as for simulate stress client
+nginx listen 8000 use socket 127.0.0.1:3302 communate with uwsgi support as bottle container
+type cmd:
+./uwsgi -s 127.0.0.1:3301 -C -w test_for_uwsgi
+
+backend phprpc server
+nginx listen 80 port use socket 127.0.0.1:3301 communiate with uwsgi provider phprpc service
+type cmd:
+./uwsgi -s 127.0.0.1:3302 -C -w stress_test
+
+
+
+ab -n 10000 -c 100 http://127.0.0.1:8000/recommend/productid/ep123123/topn/6/userid/323412u
+ab -n 100000 -c 200 http://127.0.0.1:8000/hi/aaa
+
+webbench -c 100 http://127.0.0.1:8000/hi/aaa
+webbench -c 100 http://127.0.0.1:8000/recommend/productid/ep123123/topn/6/userid/323412u
+
+nginx启动脚本：
+sudo sbin/nginx -c conf/nginx.conf
+修改后的配置文件，在phprpc 目录下
+
+
+下一步的行动计划：
+1)请教agent关于QPS的问题
+2)调优uwsgi生产上使用的参数的设置问题,使QPS达到一个比较高的水准
+3）解决一些出现的scoket 文件写关闭等问题是否和链接数有关
+4)学习使用ubuntu server 来部署整个环境
+5)撰写部署文档
+6）将代码更好的组织和分离，这个很重要，现在的脚本只是能用，phprpc部分的测试代码与库文件都混在一个目录下，
+当然，目前和没有完全掌握uwsgi的配置参数有关
+7)使用vituralenv pip fabric来部署整个应用
+8)对整个代码进行再组织和完整的过一遍，详细记录操作过程及细节
+另:关于部署的时候，在server端将一些请求的内容进行计算后进行cache,以减少动态运算的次次数，
+但是由于soap序列化结果还是很占用的时间的，是否可以将结果使用前端缓存，而避免过多的实时soap的调用。
+另外，虽然可以在客户端调用的时候(指的是C#客户端来调用soap)使用memcache或是本地cache来减少调用的次数，
+但是由于整个服务器不在掌控之内，不太好处理，因此还是不要这要操作，将关注点集中在服务器端进行优化。
+=================================================
+1）将csv格式的数据先导入到sqlserver中来看一看先，result.csv 62M,210万数据，放在resys2目录下
+use database name DMDM2,using resys2/similarity_dbschema.sql to create db and similarities table
+using resys\result.csv to import to db the bulk insert cmd are as follows:
+bcp DMDM2.dbo.similarities in f:\resultnew.csv -c -t, -k -E -C936 -S10.3.10.90 -Uabc -Pabc
+2)马上将全部数据导入mongodb中看一看大小，同时看一下能否写出较为灵活的对应于查询相似度的sql语句来。
+3）对使用item-based的结果进行处理，同时融入到现在的测试的web程序中，能直观的看到结果
+4）加入搭配的策略，要获取每一个推荐的和正在看的产品的所属类，然后查找对应的类别匹配规则
+形成一种类别中的产品可以和多种分类产品做搭配，在符合要求的分类产品集中，随机找出一件来进行组合推荐。
+以上四点在周一完成。
+5)所有脚本完整的签入git一遍
+6)设计一个脚本，用来统计result.csv中相似度的分布情况，分布以0.5,1,2为最小递增尺度来进行度量
+计算每个尺度的范围，及所占的百分比
+7)suppose have enough time implement a redis-proxy,like memcached-proxy or mysql-proxy
+serapate read and write operation,reduce master load.and master DO NOT persstent

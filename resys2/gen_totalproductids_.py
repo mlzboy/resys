@@ -17,6 +17,32 @@
 在比较相似时，对于一个有评价，另一个没有评价的项也加入标识，使用一定的算法，在计算之前给上这个值，暂时就给1最终应该是0.2
 7) 将每个产品的最近邻进行缓存储存r11
 8)写一个实时预测的函数传入userid,根据用户己往购买过的类别，及相应的搭配规则到到几个类别下找相似度最高的返回
+=====
+choice what way to deploy the whole application
+try to use the mongodb as the backend engine
+think the fullstack solution carefully
+try to build apache server,web framework,soap,fullstack open source soluation
+use nginix replace apache and use scgi or fast-cgi to as python interprive
+process match rules
+test deploy pression and whole package of things
+you only have 3 days
+you need very carefully
+say holidays to boss luan
+
+productid--->find belongs which category
+find category match rule
+find top 5 recommend is contains one of this category rule,
+if didn't random select one
+
+this approach need use sql & cache
+
+i decide use fullstack open source soluation to archive this project
+
+使用dreque的速度还是太慢，一个一个任务传递有关系，看能不能一百个任务一个包来执行派发，
+对于cache的部分考虑在本地建一个同步的部分来加速，任务派发的点也可以多点，使用redis的主从，
+再不行，可以考虑使用celery
+                               
+
 
 使用item-based作为主要结果，以规则搭配为辅
 为了使用规则搭配，使用几个set及来处理
@@ -390,14 +416,16 @@ def consume_mult_taskqueues(num=5):
         time.sleep(1)
         
 def get_legency_taskqueues():
-    finished_taskqueues=r3.hkeys("sims")
-    all_taskqueues=r3.lrange("queue",0,-1)
+    finished_taskqueues=set(r3.hkeys("sims"))
+    all_taskqueues=set(r3.lrange("queue",0,-1))
+    print "finished_taskqueues:%s"%len(finished_taskqueues)
+    print "all_taskqueues:%s"%len(all_taskqueues)
     lost_taskqueues=all_taskqueues.difference(finished_taskqueues)
     print "lost_taskqueues:%s"%len(lost_taskqueues)
     
 def gen_legency_taskqueues():
-    finished_taskqueues=r3.hkeys("sims")
-    all_taskqueues=r3.lrange("queue",0,-1)
+    finished_taskqueues=set(r3.hkeys("sims"))
+    all_taskqueues=set(r3.lrange("queue",0,-1))
     lost_taskqueues=all_taskqueues.difference(finished_taskqueues)
     gen_taskqueues(taskqueues=lost_taskqueues)
 
@@ -406,6 +434,19 @@ def clear():
     r7.flushdb()
     r3.delete("sims")
     print r3.llen('queue')
+
+def savefile(filename,lines_list):
+    f= open(filename,mode="w")
+    f.writelines(lines_list)
+    f.close()
+    
+def export_simlarity_result2csv():
+    dict=r3.hgetall("sims")
+    lines=[]
+    for k,v in dict.iteritems():
+        p1,p2=k.split(":")
+        lines.append("%s,%s,%s\r\n"%(p1,p2,result))
+    savefile("result.csv",lines)
 
 if __name__=="__main__":
     s=datetime.now()
@@ -442,7 +483,8 @@ if __name__=="__main__":
     #execute sequence
     #clear()
     #gen_taskqueues()
-    consume_mult_taskqueues()
+    #consume_mult_taskqueues()
+    export_simlarity_result2csv()
     
     print "done!"
     e=datetime.now()
