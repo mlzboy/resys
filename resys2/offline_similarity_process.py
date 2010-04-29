@@ -30,8 +30,8 @@ def getcategoryname(categoryid):
 
 def getonlineproductids():
     "query db get offline productids"
-    if r2.exists("onlineproductids"):
-        return eval(r2.get("onlineproductids"))
+    if r1.exists("onlineproductids"):
+        return eval(r1.get("onlineproductids"))
     sql="select productcode from product where isoff=0"
     rows=db2.select(sql)
     productids=[]
@@ -187,10 +187,13 @@ def getlowestproductcategories(p1):
     #if r1.hexists("low",p1):
     #    return eval(r1.hget("low",p1))
     
-    #print "---------------%s"%p1
+    print "---------------%s"%p1
     sql="select distinct c.categorycode from product p inner join clothes c on p.productcode=c.productcode where p.productcode='%s' and c.categorycode is not null"%p1
+    print sql
     rows=db2.select(sql)
-    if len(rows)==0:
+    print type(rows)
+    
+    if rows==None or len(rows)==0:
         low=['none']
     else:
         categoryid=rows[0][0]
@@ -314,7 +317,7 @@ def get20recordsfromtop60percentdata(p1):
     ll=len(dicts)
     print "7"*100
     print ll
-    ll=100
+    #ll=100
     #5 10 15 20 25 30 35 40 45 50 55 60
     rate1=[5,3,3,2,2,2,2,1,1,1,1,1]#equal 20
     #print "rate1 len:%s"%len(rate1)
@@ -347,7 +350,8 @@ def get20recordsfromtop60percentdata(p1):
 def getforbidencategories(p1):
     highest_category_id=gethighestproductcategory(p1)
     dicts={'101':['139','186']}
-    dicts={'101':['186','321','139','136']}
+    #	nanzhuan                           shiwa
+    dicts={'101':['186','321','139','136','360']}
     if dicts.has_key(highest_category_id):
         return dicts[highest_category_id]
     else:
@@ -357,6 +361,7 @@ def load2redis():
     #coll=getonlineproductids()|getrecommendproductids()
     #for productid in coll:
     #    _setrediscache(productid)
+    _setproductserialcode2redis()
     _setrediscache()
     
 def clearredis():
@@ -402,7 +407,7 @@ def getproductserialcode(p1):
         return r1.hget("productserialcodes",p1)
         
     sql="SELECT ProductSerialCode FROM dbo.Product WHERE ProductCode='%s'"%p1
-    print sql
+    #print sql
     rows=db2.select(sql)
     if len(rows)==0:
         return "-1"
@@ -411,6 +416,12 @@ def getproductserialcode(p1):
     
 if __name__=='__main__':
     s=datetime.now()
+    #getlowestproductcategories('0001173')
+    #print getproductname("412131B").decode("gb18030").encode("utf8")
+    #r=getoriginalrecommend('0002699')
+    #print r["412131B"]
+    #import sys
+    #sys.exit(0)
     #print getcategoryname('136').decode("gb18030").encode("utf8")
     #import sys
     #sys.exit(0)
@@ -438,21 +449,25 @@ if __name__=='__main__':
     #print getproductallcategories(lowest_category_id)
     #print "high:%s"%gethighestproductcategory('0001206')
     #getproductdetail("0001847")
-    #getproductdetail("0001116")
+    #getproductdetail("0004396")
     #import sys
     #sys.exit(0)
     #0001847
-    r=getoriginalrecommend('0002699')
+    productid='0002699'
+    r=getoriginalrecommend(productid)
     #getoriginalrecommend('0000108')
     #import sys
     #sys.exit(0)
     
     #print getproductallcategories("103")
     
-    result=get20recordsfromtop60percentdata('0001847')
+    result=get20recordsfromtop60percentdata(productid)
     #print getrandomelements([1,2,3],2)
     for productid in result:
-        print getproductname(productid).decode("gb18030").encode("utf8"),r[productid],productid
+	try:
+	    print getproductname(productid).decode("gb18030").encode("utf8"),r[productid],productid
+	except:
+	    print "error",productid
     #print "========"
     #print result
     #print len(result)
